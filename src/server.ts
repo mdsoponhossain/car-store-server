@@ -4,10 +4,6 @@ import configInfo from './app/config';
 import mongoose from 'mongoose';
 import { NextFunction, Request, Response } from 'express';
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
 async function connectDB() {
   try {
     await mongoose.connect(configInfo.db_url as string, {
