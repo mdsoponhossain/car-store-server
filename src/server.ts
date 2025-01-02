@@ -12,8 +12,9 @@ async function connectDB() {
     await console.log(
       colors.green('Server connected with database successfully...'),
     );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    console.log(colors.red('server failed to connect db.'));
+    console.log(colors.red(error));
   }
 }
 
@@ -24,8 +25,9 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
   next(error);
 });
 
-app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  res.status(404).json({ message: error.message });
+app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
+  next();
+  res.status(404).json({ message: error });
 });
 
 app.listen(configInfo.port, () => {
