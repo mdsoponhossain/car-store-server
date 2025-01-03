@@ -76,10 +76,32 @@ const updateACar = async (req: Request, res: Response) => {
   }
 };
 
+// update a car:
+const deleteACar = async (req: Request, res: Response) => {
+  try {
+    const result = await Car.updateOne(
+      { _id: new ObjectId(req.params.carId) },
+      { $set: { isDeleted: true } },
+    );
+    res.status(200).json({
+      success: true,
+      message: 'A car deleted successfully.',
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'failed to deleted a car data.',
+      error: (error as { message: string }).message,
+    });
+  }
+};
+
 const carController = {
   createCar,
   getAllCars,
   getACars,
   updateACar,
+  deleteACar,
 };
 export default carController;

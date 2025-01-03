@@ -7,4 +7,5 @@ export interface TCar {
   description: string;
   quantity: number;
   inStock: boolean;
+  isDeleted: boolean;
 }

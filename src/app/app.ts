@@ -1,5 +1,4 @@
 import express, { Application } from 'express';
-import carController from '../modules/car/car.controller';
 import carRouter from '../modules/car/car.route';
 const app: Application = express();
 
