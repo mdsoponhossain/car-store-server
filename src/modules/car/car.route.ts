@@ -8,5 +8,7 @@ carRouter.get('/', carController.getAllCars);
 carRouter.get('/:carId', carController.getACars);
 // Post a Car.
 carRouter.post('/', carController.createCar);
+// Update a Car.
+carRouter.put('/:carId', carController.updateACar);
 
 export default carRouter;
