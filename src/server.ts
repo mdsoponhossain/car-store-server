@@ -21,13 +21,15 @@ async function connectDB() {
 connectDB();
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
-  const error = new Error(`Your request url [${req.url}] is not valid.`);
+  const error = new Error(
+    `Your requested method [${req.method}]  & url [${req.url}] is not valid.`,
+  );
   next(error);
 });
 
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
-  next();
-  res.status(404).json({ message: error });
+  res.status(404).json({ message: (error as { message: string }).message });
 });
 
 app.listen(configInfo.port, () => {
