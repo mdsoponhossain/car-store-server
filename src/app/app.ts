@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import carRouter from '../modules/car/car.route';
+import orderRouter from '../modules/order/order.route';
 const app: Application = express();
 
 // parsers:
@@ -11,4 +12,5 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/cars', carRouter);
+app.use('/api/orders', orderRouter);
 export default app;
