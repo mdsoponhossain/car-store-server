@@ -18,6 +18,7 @@ const carSchema = new Schema<TCar>(
     },
     price: {
       type: Number,
+      min: [0, 'Price must be a positive number'],
       required: true,
     },
     category: {
@@ -42,11 +43,20 @@ const carSchema = new Schema<TCar>(
       type: Boolean,
       default: false,
     },
+    createdAt: {
+      type: Date,
+      default: Date.now(),
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now(),
+    },
   },
   { versionKey: false },
 );
 
 // middleware for handling api operation:
+
 carSchema.pre('find', async function (next: NextFunction) {
   this.find({ isDeleted: false }).projection({ isDeleted: 0 });
   next();

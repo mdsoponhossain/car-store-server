@@ -6,8 +6,8 @@ const createAnOrder = async (req: Request, res: Response) => {
   try {
     const result = await new Order(req.body).save();
     res.status(200).json({
-      success: true,
-      message: 'Order is placed successfully.',
+      status: true,
+      message: 'Order created successfully',
       data: result,
     });
   } catch (error) {

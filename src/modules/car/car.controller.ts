@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import { ObjectId } from 'mongodb';
+// import { carValidationSchema } from './car.validation';
 import { Car } from './car.model';
 
 // get all car:
@@ -6,8 +8,8 @@ const getAllCars = async (req: Request, res: Response) => {
   try {
     const result = await Car.find();
     res.status(200).json({
-      success: true,
-      message: 'All cars loaded successfully.',
+      message: 'Cars retrieved successfully',
+      status: true,
       data: result,
     });
   } catch (error) {
@@ -18,7 +20,7 @@ const getAllCars = async (req: Request, res: Response) => {
     });
   }
 };
-import { ObjectId } from 'mongodb';
+
 // get all car:
 const getACars = async (req: Request, res: Response) => {
   try {
@@ -40,17 +42,26 @@ const getACars = async (req: Request, res: Response) => {
 // create car:
 const createCar = async (req: Request, res: Response) => {
   try {
+    // const validCarData = carValidationSchema.parse(req.body);
     const result = await new Car(req.body).save();
     res.status(200).json({
       success: true,
-      message: 'Car is added in db successfully.',
+      message: 'Car created successfully',
       data: result,
     });
-  } catch (error) {
-    res.status(500).json({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    const customError = {
+      message: 'Validation failed',
       success: false,
-      message: 'Car is failed to add in db.',
-      error: (error as { message: string }).message,
+      error: {
+        name: error?.errors?.price?.name,
+        errors: error?.errors,
+        stack: error?.stack ? error?.stack : null,
+      },
+    };
+    res.json({
+      ...customError,
     });
   }
 };
@@ -60,7 +71,7 @@ const updateACar = async (req: Request, res: Response) => {
   try {
     const result = await Car.updateOne(
       { _id: new ObjectId(req.params.carId) },
-      { $set: req.body },
+      { $set: req.body, updatedAt: new Date() },
     );
     res.status(200).json({
       success: true,
