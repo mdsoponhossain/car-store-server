@@ -7,11 +7,19 @@ import { Car } from './car.model';
 const getAllCars = async (req: Request, res: Response) => {
   try {
     const result = await Car.find();
-    res.status(200).json({
-      message: 'Cars retrieved successfully',
-      status: true,
-      data: result,
-    });
+    if (result?.length) {
+      res.status(200).json({
+        message: 'Cars retrieved successfully',
+        status: true,
+        data: result,
+      });
+    } else {
+      res.status(200).json({
+        message: 'No cars data found!',
+        status: false,
+        data: result,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -21,13 +29,13 @@ const getAllCars = async (req: Request, res: Response) => {
   }
 };
 
-// get all car:
+// get a car:
 const getACars = async (req: Request, res: Response) => {
   try {
     const result = await Car.findOne({ _id: new ObjectId(req.params.carId) });
     res.status(200).json({
-      success: true,
-      message: 'A car loaded successfully.',
+      message: 'Car retrieved successfully',
+      status: true,
       data: result,
     });
   } catch (error) {
@@ -69,13 +77,13 @@ const createCar = async (req: Request, res: Response) => {
 // update a car:
 const updateACar = async (req: Request, res: Response) => {
   try {
-    const result = await Car.updateOne(
+    const result = await Car.findByIdAndUpdate(
       { _id: new ObjectId(req.params.carId) },
       { $set: req.body, updatedAt: new Date() },
     );
     res.status(200).json({
-      success: true,
-      message: 'A car updated successfully.',
+      message: 'Car updated successfully',
+      status: true,
       data: result,
     });
   } catch (error) {
@@ -87,22 +95,26 @@ const updateACar = async (req: Request, res: Response) => {
   }
 };
 
-// update a car:
+// delete a car:
 const deleteACar = async (req: Request, res: Response) => {
   try {
     const result = await Car.updateOne(
       { _id: new ObjectId(req.params.carId) },
       { $set: { isDeleted: true } },
     );
-    res.status(200).json({
-      success: true,
-      message: 'A car deleted successfully.',
-      data: result,
-    });
+    if (result.modifiedCount) {
+      res.status(200).json({
+        message: 'Car deleted successfully',
+        status: true,
+        data: { result },
+      });
+    } else {
+      throw new Error('Car already been deleted!');
+    }
   } catch (error) {
     res.status(500).json({
-      success: false,
-      message: 'failed to deleted a car data.',
+      status: false,
+      message: 'Something went wrong!',
       error: (error as { message: string }).message,
     });
   }

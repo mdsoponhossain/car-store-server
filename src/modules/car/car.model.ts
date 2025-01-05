@@ -57,13 +57,15 @@ const carSchema = new Schema<TCar>(
 
 // middleware for handling api operation:
 
-carSchema.pre('find', async function (next: NextFunction) {
-  this.find({ isDeleted: false }).projection({ isDeleted: 0 });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+carSchema.pre('find', function (this: any, next: NextFunction) {
+  this.where({ isDeleted: false }).select({ isDeleted: 0 });
   next();
 });
 
-carSchema.pre('findOne', async function (next: NextFunction) {
-  this.find({ isDeleted: false }).projection({ isDeleted: 0 });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+carSchema.pre('findOne', function (this: any, next: NextFunction) {
+  this.where({ isDeleted: false }).select({ isDeleted: 0 });
   next();
 });
 // car model:
